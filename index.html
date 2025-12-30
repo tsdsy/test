@@ -23,57 +23,57 @@
             display: none;
         }
 
-        /* 告别文字样式 - 2025 */
+        /* 消失的文本样式 */
         #goodbye-text {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 995;
-            font-size: 60px;
+            font-size: 100px;
             font-weight: bold;
-            color: #fff;
+            color: #ffffff;
             opacity: 1;
+            transition: opacity 2s ease, transform 2s ease;
             pointer-events: none;
             font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+         #goodbye-text {
             animation: goodbyeBlink 0.8s infinite alternate;
-            text-shadow: 0 0 5px #ff0, 0 0 10px #ff0, 0 0 15px #ff0;
+            opacity: 1;
+            letter-spacing: normal;
+            filter: blur(0px);
         }
         
-        /* 2025跳动动画 */
-        @keyframes goodbyeBlink {
-            0% { 
-                opacity: 0.9; 
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1.05);
-            }
+        #goodbye-text.disappearing {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.5);
+              filter: blur(8px); 
+            letter-spacing: 20px; 
         }
         
-        /* 欢迎文字样式 - 2026 */
+        
+        /* 欢迎文本样式 */
         #welcome-text {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             z-index: 996;
-            font-size: 70px;
+            font-size: 100px;
             font-weight: bold;
-            color: #fff;
+            color: #fd4603;
             transition: transform 1.5s ease;
             pointer-events: none;
             font-family: 'Microsoft YaHei', Arial, sans-serif;
-            text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 15px #0ff;
         }
         
         #welcome-text.appearing {
             transform: translate(-50%, -50%) scale(1);
-            animation: welcomeBlink 0.8s infinite alternate;
         }
         
-        /* 2026跳动动画 */
+        /* 欢迎文本动画 */
         @keyframes welcomeBlink {
             0% { 
                 opacity: 0.9; 
@@ -85,23 +85,8 @@
             }
         }
         
-        /* 文字炸开粒子样式 - 优化烟花视觉效果 */
-        .text-particle {
-            position: absolute;
-            color: #fff;
-            font-size: 60px;
-            font-weight: bold;
-            pointer-events: none;
-            z-index: 995;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            /* 多色烟花光晕，更贴近真实烟花 */
-            text-shadow: 
-                0 0 4px currentColor,
-                0 0 8px currentColor,
-                0 0 12px currentColor,
-                0 0 16px rgba(255,255,255,0.8);
-            /* 硬件加速，动画更流畅 */
-            will-change: transform, opacity;
+        #welcome-text.appearing {
+            animation: welcomeBlink 0.8s infinite alternate;
         }
         
         /* 粒子效果样式 */
@@ -148,7 +133,7 @@
             height: 200px; /* 初次显示时放大 */
         }
         
-        /* 新年快乐样式 - 离子版闪烁效果 */
+         /* 添加新年快乐样式 - 离子版闪烁效果 */
         #new-year-text {
             position: fixed;
             bottom: 40%;
@@ -201,7 +186,6 @@
         #new-year-text.hidden {
             display: none;
         }
-        
         /* 旋转动画 */
         @keyframes rotate {
             0% { transform: rotate(0deg); }
@@ -311,8 +295,8 @@
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const audioTip = document.getElementById('audio-tip');
-        const newYearText = document.getElementById('new-year-text');
-        const initialTip = document.getElementById('initial-tip');
+        const newYearText = document.getElementById('new-year-text'); // 新增获取新年快乐元素
+        const initialTip = document.getElementById('initial-tip'); // 获取初始提示元素
         const goodbyeText = document.getElementById('goodbye-text');
         const welcomeText = document.getElementById('welcome-text');
         const fireworksCanvas = document.getElementById('fireworks-canvas');
@@ -336,7 +320,7 @@
         let hasMovedFromCenter = false; // 是否已经从中心位置移开
         let fireworksActive = false;  // 烟花效果是否激活
 
-        // 烟花粒子类（背景烟花）
+        // 烟花粒子类
         class Particle {
             constructor(x, y, color) {
                 this.x = x;
@@ -376,12 +360,12 @@
             }
         }
 
-        // 烟花类（背景烟花）
+        // 烟花类
         class Firework {
             constructor() {
                 this.x = Math.random() * fireworksCanvas.width;
                 this.y = fireworksCanvas.height;
-                this.targetY = Math.random() * fireworksCanvas.height * 0.4;
+                this.targetY = Math.random() * fireworksCanvas.height * 0.4; // 随机高度爆炸
                 this.speed = Math.random() * 3 + 2;
                 this.color = this.getRandomColor();
                 this.radius = 2;
@@ -407,181 +391,53 @@
             update() {
                 if (!this.exploded) {
                     this.y -= this.speed;
+                    
+                    // 检查是否到达爆炸点或接近顶部
                     if (this.y <= this.targetY) {
                         this.explode();
                     }
+                    
                     this.draw();
                 } else {
+                    // 更新粒子
                     for (let i = this.particles.length - 1; i >= 0; i--) {
                         if (!this.particles[i].update()) {
                             this.particles.splice(i, 1);
                         }
                     }
                 }
+                
                 return this.particles.length > 0 || !this.exploded;
             }
             
             explode() {
                 this.exploded = true;
-                const particleCount = Math.random() * 100 + 50;
+                
+                // 创建爆炸粒子
+                const particleCount = Math.random() * 100 + 50; // 50-150个粒子
                 for (let i = 0; i < particleCount; i++) {
                     this.particles.push(new Particle(this.x, this.y, this.getRandomColor()));
                 }
             }
         }
 
-        // 文字炸开粒子类（2025消失特效 - 优化烟花效果）
-        class TextParticle {
-            constructor(char, x, y) {
-                this.char = char;
-                this.x = x;
-                this.y = y;
-                // 随机大小，增加层次感
-                this.size = Math.random() * 20 + 20; // 减小粒子大小，更精致
-                // 优化速度：更符合烟花炸开的物理轨迹（速度分层）
-                const speedBase = Math.random() * 6 + 4; // 减小速度，更优雅
-                const angle = Math.random() * Math.PI * 2; // 360度随机角度炸开
-                this.speed = {
-                    x: Math.cos(angle) * speedBase,
-                    y: Math.sin(angle) * speedBase - 3 // 轻微向上的初速度，更像烟花
-                };
-                // 更柔和的重力，让粒子飘得更久
-                this.gravity = 0.05; // 减小重力
-                // 更自然的摩擦力
-                this.friction = 0.98; // 减小摩擦力，让动画更持久
-                this.alpha = 1;
-                // 更慢的衰减，动画更优雅
-                this.decay = Math.random() * 0.005 + 0.005; // 减慢衰减速度
-                this.rotation = Math.random() * 360;
-                // 更柔和的旋转速度
-                this.rotateSpeed = (Math.random() - 0.5) * 3; // 减小旋转速度
-                // 随机烟花颜色，每个粒子颜色不同
-                this.color = this.getRandomFireworkColor();
-                
-                // 创建DOM元素
-                this.element = document.createElement('div');
-                this.element.className = 'text-particle';
-                this.element.textContent = this.char;
-                this.element.style.left = `${x}px`;
-                this.element.style.top = `${y}px`;
-                this.element.style.opacity = this.alpha;
-                this.element.style.fontSize = `${this.size}px`;
-                this.element.style.color = this.color;
-                // 添加模糊效果，更像烟花
-                this.element.style.filter = `blur(${Math.random() * 0.5}px)`;
-                document.body.appendChild(this.element);
-            }
-            
-            // 烟花配色方案
-            getRandomFireworkColor() {
-                const colors = [
-                    '#ff4444', '#ffdd44', '#44ff44', '#44dddd', 
-                    '#4444ff', '#dd44dd', '#ff8844', '#ffffff',
-                    '#ff6600', '#ff00cc', '#00ccff', '#cc00ff'
-                ];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-            
-            update() {
-                // 更新物理属性：更自然的运动轨迹
-                this.speed.x *= this.friction;
-                this.speed.y *= this.friction;
-                this.speed.y += this.gravity;
-                this.x += this.speed.x;
-                this.y += this.speed.y;
-                this.alpha -= this.decay;
-                this.rotation += this.rotateSpeed;
-                
-                // 更新DOM样式：增加大小渐变，更贴近烟花
-                const scale = this.alpha * 1.5; // 粒子逐渐缩小
-                this.element.style.left = `${this.x}px`;
-                this.element.style.top = `${this.y}px`;
-                this.element.style.opacity = this.alpha;
-                this.element.style.transform = `rotate(${this.rotation}deg) scale(${scale})`;
-                // 随着时间变化模糊度，模拟烟花的扩散效果
-                this.element.style.filter = `blur(${(1 - this.alpha) * 1.5}px)`;
-                
-                // 粒子死亡判断
-                if (this.alpha <= 0) {
-                    document.body.removeChild(this.element);
-                    return false;
-                }
-                return true;
-            }
-        }
-
         // 烟花系统
         const fireworks = [];
-        let textParticles = [];
         
-        // 创建背景烟花
         function createFirework() {
             if (fireworksActive) {
                 fireworks.push(new Firework());
             }
         }
         
-        // 文字炸开动画 - 优化版本
-        function explodeText() {
-            // 先让2025文字快速闪烁后消失，增加过渡感
-            goodbyeText.style.animation = 'none';
-            goodbyeText.style.opacity = 0;
-            // 添加闪烁效果
-            goodbyeText.style.animation = 'goodbyeBlink 0.3s ease-in-out 3';
-            
-            setTimeout(() => {
-                goodbyeText.style.display = 'none';
-                
-                // 获取文字位置
-                const rect = goodbyeText.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                
-                // 拆分文字为单个字符
-                const text = '2025 再见';
-                const chars = text.split('');
-                
-                // 每个字符生成多个粒子，让炸开效果更饱满
-                chars.forEach((char, index) => {
-                    const offsetX = (index - chars.length / 2) * 30; // 减小字符间距
-                    const baseX = centerX + offsetX;
-                    const baseY = centerY;
-                    
-                    // 每个字符生成5-8个粒子，形成更丰富的烟花效果
-                    const particleCount = Math.floor(Math.random() * 4) + 5; // 增加粒子数量
-                    for (let i = 0; i < particleCount; i++) {
-                        // 粒子位置轻微偏移，避免重叠
-                        const randomX = baseX + Math.random() * 15 - 7; // 减小偏移范围
-                        const randomY = baseY + Math.random() * 15 - 7;
-                        textParticles.push(new TextParticle(char, randomX, randomY));
-                    }
-                });
-                
-                // 文字粒子动画循环
-                function animateTextParticles() {
-                    let alive = false;
-                    for (let i = textParticles.length - 1; i >= 0; i--) {
-                        if (textParticles[i].update()) {
-                            alive = true;
-                        } else {
-                            textParticles.splice(i, 1);
-                        }
-                    }
-                    if (alive) {
-                        requestAnimationFrame(animateTextParticles);
-                    }
-                }
-                animateTextParticles();
-            }, 1000); // 延长过渡时间，让闪烁效果更明显
-        }
-        
-        // 背景烟花动画
         function animate() {
             if (!fireworksActive) return;
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            // 清除画布
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // 使用半透明黑色创建轨迹效果
             ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
             
+            // 更新和绘制烟花
             for (let i = fireworks.length - 1; i >= 0; i--) {
                 if (!fireworks[i].update()) {
                     fireworks.splice(i, 1);
@@ -593,6 +449,7 @@
 
         // 工具函数：显示提示框
         const showTip = (text, duration = 2000) => {
+            // 如果播放器还在中央位置，显示在播放器上方
             if (!hasMovedFromCenter) {
                 initialTip.textContent = text;
                 initialTip.style.display = 'block';
@@ -614,29 +471,33 @@
             
             fireworksActive = true;
             fireworksCanvas.style.display = 'block';
-            document.body.style.backgroundColor = '#000';
+            document.body.style.backgroundColor = '#000'; // 背景变黑色
             
-            // 开始背景烟花动画
+            // 开始动画循环
             animate();
+            
+            // 定时创建烟花
             setInterval(createFirework, 800);
             
-            // 3秒后触发2025文字炸开效果
+            // 显示告别文字并设置消失动画
             setTimeout(() => {
-                explodeText();
+                goodbyeText.classList.add('disappearing');
             }, 3000);
             
-            // 文字炸开后1秒显示2026
+            // 在告别文字消失后显示欢迎文字
             setTimeout(() => {
                 welcomeText.classList.add('appearing');
-            }, 4000);
+            }, 3000);
         }
 
         // ========== 核心逻辑：音频自动播放处理 ========== 
         window.addEventListener('load', async () => {
             try {
+                // 尝试静音自动播放（浏览器允许无交互静音播放）
                 await audioPlayer.play();
                 showTip('音乐已静音自动播放，点击按钮可取消静音');
             } catch (error) {
+                // 极端情况：静音自动播放也失败（需用户交互）
                 isPlaying = false;
                 playPauseBtn.textContent = '▶';
                 showTip('需要点击播放按钮才能播放音乐');
@@ -644,9 +505,9 @@
             }
         });
 
-        // ========== 播放器按钮点击逻辑 ========== 
+        // ========== 播放器按钮点击：双击弹出面板，单击控制播放 ========== 
         playerBtn.addEventListener('click', () => {
-            // 移动播放器到左下角
+            // 如果播放器还在中央位置，点击后移动到左下角
             if (!hasMovedFromCenter) {
                 playerBtn.classList.remove('center-position');
                 playerBtn.style.bottom = '20px';
@@ -655,19 +516,22 @@
                 
                 // 隐藏新年快乐文字
                 newYearText.classList.add('hidden');
+                
+                // 隐藏初始提示
                 initialTip.style.display = 'none';
                 
-                // 启动烟花和文字特效
+                // 启动烟花效果
                 startFireworks();
             }
             
             clickCount++;
             
-            // 首次点击取消静音
+            // 首次点击：取消静音（突破静音限制）
             if (isMutedAutoPlay) {
                 audioPlayer.muted = false;
                 isMutedAutoPlay = false;
                 showTip('已取消静音，享受音乐吧～');
+                // 重置点击计数，首次点击只用于取消静音
                 clickCount = 1;
             }
             
@@ -689,16 +553,20 @@
                     isPlaying = !isPlaying;
                 }
                 
+                // 设置定时器，等待第二次点击
                 clickTimer = setTimeout(() => {
-                    clickCount = 0;
-                }, 300);
+                    clickCount = 0; // 重置点击计数
+                }, 300); // 300ms内没有第二次点击则执行单击操作
             } else if (clickCount === 2) {
                 // 双击显示/隐藏控制面板
-                clearTimeout(clickTimer);
+                clearTimeout(clickTimer); // 清除单击的定时器
                 isPanelVisible = !isPanelVisible;
                 controlPanel.style.display = isPanelVisible ? 'flex' : 'none';
+                
+                // 暂停/恢复旋转动画
                 playerBtn.style.animationPlayState = isPanelVisible ? 'paused' : 'running';
-                clickCount = 0;
+                
+                clickCount = 0; // 重置点击计数
             }
         });
 
@@ -709,6 +577,7 @@
                 playPauseBtn.textContent = '▶';
                 showTip('音乐已暂停');
             } else {
+                // 播放前先尝试取消静音
                 audioPlayer.muted = false;
                 audioPlayer.play().then(() => {
                     playPauseBtn.textContent = '⏸';
@@ -720,7 +589,7 @@
             isPlaying = !isPlaying;
         });
 
-        // ========== 上一曲/下一曲（单首循环） ========== 
+        // ========== 上一曲/下一曲（单首循环逻辑） ========== 
         const resetAudio = () => {
             audioPlayer.currentTime = 0;
             if (!isPlaying) {
@@ -735,25 +604,27 @@
         nextBtn.addEventListener('click', resetAudio);
 
         // ========== 音频异常处理 ========== 
+        // 音频加载失败
         audioPlayer.addEventListener('error', () => {
             showTip('音频文件加载失败，请检查文件路径');
             isPlaying = false;
             playPauseBtn.textContent = '▶';
         });
 
+        // 音频播放结束（循环模式下不会触发，仅备用）
         audioPlayer.addEventListener('ended', () => {
             playPauseBtn.textContent = '▶';
             isPlaying = false;
             showTip('音乐播放完毕');
         });
 
-        // ========== 页面隐藏/显示处理 ========== 
+        // ========== 页面隐藏/显示时的处理（优化体验） ========== 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 audioPlayer.pause();
                 isPlaying = false;
                 playPauseBtn.textContent = '▶';
-            } else if (isPanelVisible) {
+            } else if (isPanelVisible) { // 页面恢复显示且面板打开时，自动播放
                 audioPlayer.play();
                 isPlaying = true;
                 playPauseBtn.textContent = '⏸';
