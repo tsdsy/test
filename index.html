@@ -39,7 +39,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 100px;
+            font-size: 8vw;
             font-weight: bold;
             color: #fc0505;
             z-index: 995;
@@ -56,6 +56,19 @@
             opacity: 0;
             transform: scale(0.5);
             animation: charPop 0.5s ease-out forwards;
+        }
+        
+        /* 添加跳动动画 */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.05);
+            }
         }
         
         @keyframes fadeInScale {
@@ -90,10 +103,10 @@
     <canvas id="fireworks-canvas"></canvas>
     
     <!-- 居中的新年快乐按钮 -->
-    <div id="buttonContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+    <div id="buttonContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; animation: bounce 2s infinite;">
         <button id="newYearButton" style="
-            padding: 20px 40px;
-            font-size: 24px;
+            padding: 15px 30px;
+            font-size: 100px;
             font-weight: bold;
             background-color: #ff4444;
             color: #fff;
@@ -102,6 +115,7 @@
             cursor: pointer;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
+            min-width: 150px;
         ">新年快乐</button>
     </div>
     
