@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>你好2026</title>
+    <title>烟花效果</title>
     <style>
         /* 重置默认样式 */
         * {
@@ -23,72 +23,6 @@
             display: none;
         }
 
-        /* 消失的文本样式 */
-        #goodbye-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 995;
-            font-size: 100px;
-            font-weight: bold;
-            color: #ffffff;
-            opacity: 1;
-            transition: opacity 2s ease, transform 2s ease;
-            pointer-events: none;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-        }
-
-         #goodbye-text {
-            animation: goodbyeBlink 0.8s infinite alternate;
-            opacity: 1;
-            letter-spacing: normal;
-            filter: blur(0px);
-        }
-        
-        #goodbye-text.disappearing {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(1.5);
-              filter: blur(8px); 
-            letter-spacing: 20px; 
-        }
-        
-        
-        /* 欢迎文本样式 */
-        #welcome-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            z-index: 996;
-            font-size: 100px;
-            font-weight: bold;
-            color: #fd4603;
-            transition: transform 1.5s ease;
-            pointer-events: none;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-        }
-        
-        #welcome-text.appearing {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
-        /* 欢迎文本动画 */
-        @keyframes welcomeBlink {
-            0% { 
-                opacity: 0.9; 
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% { 
-                opacity: 1; 
-                transform: translate(-50%, -50%) scale(1.05);
-            }
-        }
-        
-        #welcome-text.appearing {
-            animation: welcomeBlink 0.8s infinite alternate;
-        }
-        
         /* 粒子效果样式 */
         .particle {
             position: absolute;
@@ -98,209 +32,89 @@
             pointer-events: none;
             z-index: 997;
         }
-
-        /* 播放器按钮样式 */
-        #player-btn {
+        
+        /* 2026艺术字样式 */
+        #yearText {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            z-index: 1000;
-            animation: rotate 10s linear infinite;
-            background-color: #fff;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s ease;
-        }
-        
-        #player-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        /* 添加初始中央位置样式 */
-        #player-btn.center-position {
-            bottom: 50%;
-            left: 44%;
-            transform: translate(-45%, 50%);
-            width: 200px;  /* 初次显示时放大 */
-            height: 200px; /* 初次显示时放大 */
-        }
-        
-         /* 添加新年快乐样式 - 离子版闪烁效果 */
-        #new-year-text {
-            position: fixed;
-            bottom: 40%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #ffcc00, #ff00cc);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 60px;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
             font-weight: bold;
-            text-align: center;
-            display: block;
-            transition: opacity 0.3s ease;
-            animation: gradient 2s ease infinite, blink 0.8s infinite alternate;
-            text-shadow: 
-                0 0 5px rgba(255, 255, 255, 0.8),
-                0 0 10px rgba(255, 255, 255, 0.6),
-                0 0 15px rgba(230, 0, 115, 0.8),
-                0 0 20px rgba(230, 0, 115, 0.6),
-                0 0 25px rgba(230, 0, 115, 0.4),
-                0 0 30px rgba(230, 0, 115, 0.4),
-                0 0 35px rgba(230, 0, 115, 0.2);
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            letter-spacing: 2px;
+            color: #fc0505;
+            z-index: 995;
+            display: none;
+            font-family: 'Arial Black', '微软雅黑', sans-serif;
+            text-shadow: 0 0 10px #f9f9f9, 0 0 20px #f9f9f9;
+            opacity: 0;
+            animation: fadeInScale 1s ease-out forwards;
         }
         
-        @keyframes blink {
-            0% { 
-                opacity: 0.9; 
-                transform: translateX(-50%) scale(1);
+        /* 单个字符样式 */
+        .char {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: charPop 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
             }
-            100% { 
-                opacity: 1; 
-                transform: translateX(-50%) scale(1.05);
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
             }
         }
         
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        #new-year-text.hidden {
-            display: none;
-        }
-        /* 旋转动画 */
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* 控制面板样式 - 横向弹出 */
-        #control-panel {
-            position: fixed;
-            bottom: 20px;
-            left: 90px;
-            width: 200px;
-            background: white;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 999;
-            display: none;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .control-btn {
-            padding: 8px 12px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.2s ease;
-        }
-        
-        .control-btn:hover {
-            background: #45a049;
-        }
-        
-        /* 加载/错误提示 */
-        #audio-tip {
-            position: fixed;
-            bottom: 90px;
-            left: 20px;
-            padding: 8px 15px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border-radius: 6px;
-            font-size: 14px;
-            z-index: 998;
-            display: none;
-        }
-        
-        #initial-tip {
-            position: fixed;
-            bottom: calc(68% + 60px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 998;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: none;
+        @keyframes charPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translateY(20px);
+            }
+            70% {
+                opacity: 1;
+                transform: scale(1.2) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 音频元素：默认静音（突破自动播放限制） -->
-    <audio id="audio-player" src="1.MP3" autoplay loop muted></audio>
-    
-    <!-- 播放器按钮 -->
-    <div id="player-btn" class="center-position" style="background-image: url('1.jpg');"></div>
-    
-    <!-- 新年快乐文字 -->
-    <div id="new-year-text">新年快乐</div>
-    
-    <!-- 告别文字 -->
-    <div id="goodbye-text">2025 再见</div>
-    
-    <!-- 欢迎文字 -->
-    <div id="welcome-text">你好 2026</div>
-    
-    <!-- 控制面板 -->
-    <div id="control-panel">
-        <button class="control-btn" id="prev-btn">⏮</button>
-        <button class="control-btn" id="play-pause-btn">⏸</button>
-        <button class="control-btn" id="next-btn">⏭</button>
-    </div>
-
-    <!-- 音频提示框 -->
-    <div id="audio-tip"></div>
-    
-    <!-- 音频提示框（用于初始居中位置提示） -->
-    <div id="initial-tip">需要点击播放按钮才能播放音乐</div>
-    
     <!-- 烟花画布 -->
     <canvas id="fireworks-canvas"></canvas>
+    
+    <!-- 居中的新年快乐按钮 -->
+    <div id="buttonContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+        <button id="newYearButton" style="
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #ff4444;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        ">新年快乐</button>
+    </div>
+    
+    <!-- 2026艺术字显示区域 -->
+    <div id="yearText"></div>
 
     <script>
         // DOM元素获取
-        const playerBtn = document.getElementById('player-btn');
-        const controlPanel = document.getElementById('control-panel');
-        const audioPlayer = document.getElementById('audio-player');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const audioTip = document.getElementById('audio-tip');
-        const newYearText = document.getElementById('new-year-text'); // 新增获取新年快乐元素
-        const initialTip = document.getElementById('initial-tip'); // 获取初始提示元素
-        const goodbyeText = document.getElementById('goodbye-text');
-        const welcomeText = document.getElementById('welcome-text');
         const fireworksCanvas = document.getElementById('fireworks-canvas');
         const ctx = fireworksCanvas.getContext('2d');
+        const newYearButton = document.getElementById('newYearButton');
+        const buttonContainer = document.getElementById('buttonContainer');
+        const yearText = document.getElementById('yearText');
         
         // 设置canvas尺寸
         function resizeCanvas() {
@@ -312,12 +126,6 @@
         resizeCanvas();
 
         // 状态管理
-        let isPanelVisible = false;   // 控制面板显隐
-        let isPlaying = true;         // 音频播放状态
-        let isMutedAutoPlay = true;   // 是否是静音自动播放
-        let clickCount = 0;           // 点击计数器
-        let clickTimer = null;        // 点击计时器
-        let hasMovedFromCenter = false; // 是否已经从中心位置移开
         let fireworksActive = false;  // 烟花效果是否激活
 
         // 烟花粒子类
@@ -447,24 +255,6 @@
             requestAnimationFrame(animate);
         }
 
-        // 工具函数：显示提示框
-        const showTip = (text, duration = 2000) => {
-            // 如果播放器还在中央位置，显示在播放器上方
-            if (!hasMovedFromCenter) {
-                initialTip.textContent = text;
-                initialTip.style.display = 'block';
-                setTimeout(() => {
-                    initialTip.style.display = 'none';
-                }, duration);
-            } else {
-                audioTip.textContent = text;
-                audioTip.style.display = 'block';
-                setTimeout(() => {
-                    audioTip.style.display = 'none';
-                }, duration);
-            }
-        };
-
         // 启动烟花效果
         function startFireworks() {
             if (fireworksActive) return;
@@ -478,158 +268,38 @@
             
             // 定时创建烟花
             setInterval(createFirework, 800);
-            
-            // 显示告别文字并设置消失动画
-            setTimeout(() => {
-                goodbyeText.classList.add('disappearing');
-            }, 3000);
-            
-            // 在告别文字消失后显示欢迎文字
-            setTimeout(() => {
-                welcomeText.classList.add('appearing');
-            }, 3000);
         }
-
-        // ========== 核心逻辑：音频自动播放处理 ========== 
-        window.addEventListener('load', async () => {
-            try {
-                // 尝试静音自动播放（浏览器允许无交互静音播放）
-                await audioPlayer.play();
-                showTip('音乐已静音自动播放，点击按钮可取消静音');
-            } catch (error) {
-                // 极端情况：静音自动播放也失败（需用户交互）
-                isPlaying = false;
-                playPauseBtn.textContent = '▶';
-                showTip('需要点击播放按钮才能播放音乐');
-                console.warn('自动播放失败:', error);
-            }
-        });
-
-        // ========== 播放器按钮点击：双击弹出面板，单击控制播放 ========== 
-        playerBtn.addEventListener('click', () => {
-            // 如果播放器还在中央位置，点击后移动到左下角
-            if (!hasMovedFromCenter) {
-                playerBtn.classList.remove('center-position');
-                playerBtn.style.bottom = '20px';
-                playerBtn.style.left = '20px';
-                hasMovedFromCenter = true;
-                
-                // 隐藏新年快乐文字
-                newYearText.classList.add('hidden');
-                
-                // 隐藏初始提示
-                initialTip.style.display = 'none';
-                
-                // 启动烟花效果
-                startFireworks();
+        
+        // 逐字显示2026
+        function showYearText() {
+            yearText.style.display = 'block';
+            const year = '你好 2026';
+            yearText.innerHTML = ''; // 清空内容
+            
+            // 为每个字符创建span元素
+            for (let i = 0; i < year.length; i++) {
+                const charSpan = document.createElement('span');
+                charSpan.className = 'char';
+                charSpan.textContent = year[i];
+                charSpan.style.animationDelay = (i * 0.2) + 's'; // 每个字符延迟0.2秒
+                yearText.appendChild(charSpan);
             }
             
-            clickCount++;
-            
-            // 首次点击：取消静音（突破静音限制）
-            if (isMutedAutoPlay) {
-                audioPlayer.muted = false;
-                isMutedAutoPlay = false;
-                showTip('已取消静音，享受音乐吧～');
-                // 重置点击计数，首次点击只用于取消静音
-                clickCount = 1;
-            }
-            
-            if (clickCount === 1) {
-                // 单击控制播放/暂停
-                if (!isMutedAutoPlay) {
-                    if (isPlaying) {
-                        audioPlayer.pause();
-                        playPauseBtn.textContent = '▶';
-                        showTip('音乐已暂停');
-                    } else {
-                        audioPlayer.play().then(() => {
-                            playPauseBtn.textContent = '⏸';
-                            showTip('音乐已播放');
-                        }).catch(() => {
-                            showTip('播放失败，请再次点击尝试');
-                        });
-                    }
-                    isPlaying = !isPlaying;
-                }
-                
-                // 设置定时器，等待第二次点击
-                clickTimer = setTimeout(() => {
-                    clickCount = 0; // 重置点击计数
-                }, 300); // 300ms内没有第二次点击则执行单击操作
-            } else if (clickCount === 2) {
-                // 双击显示/隐藏控制面板
-                clearTimeout(clickTimer); // 清除单击的定时器
-                isPanelVisible = !isPanelVisible;
-                controlPanel.style.display = isPanelVisible ? 'flex' : 'none';
-                
-                // 暂停/恢复旋转动画
-                playerBtn.style.animationPlayState = isPanelVisible ? 'paused' : 'running';
-                
-                clickCount = 0; // 重置点击计数
-            }
+            // 触发整体淡入缩放动画
+            yearText.style.animation = 'fadeInScale 1s ease-out forwards';
+        }
+        
+        // 点击按钮后启动烟花并隐藏按钮，同时显示2026
+        newYearButton.addEventListener('click', function() {
+            startFireworks();
+            // 隐藏按钮容器
+            buttonContainer.style.display = 'none';
+            // 显示2026艺术字
+            setTimeout(showYearText, 500); // 延迟显示，让烟花先开始
         });
-
-        // ========== 播放/暂停按钮 ========== 
-        playPauseBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audioPlayer.pause();
-                playPauseBtn.textContent = '▶';
-                showTip('音乐已暂停');
-            } else {
-                // 播放前先尝试取消静音
-                audioPlayer.muted = false;
-                audioPlayer.play().then(() => {
-                    playPauseBtn.textContent = '⏸';
-                    showTip('音乐已播放');
-                }).catch(() => {
-                    showTip('播放失败，请再次点击尝试');
-                });
-            }
-            isPlaying = !isPlaying;
-        });
-
-        // ========== 上一曲/下一曲（单首循环逻辑） ========== 
-        const resetAudio = () => {
-            audioPlayer.currentTime = 0;
-            if (!isPlaying) {
-                audioPlayer.play();
-                playPauseBtn.textContent = '⏸';
-                isPlaying = true;
-                showTip('已重新播放当前音乐');
-            }
-        };
-
-        prevBtn.addEventListener('click', resetAudio);
-        nextBtn.addEventListener('click', resetAudio);
-
-        // ========== 音频异常处理 ========== 
-        // 音频加载失败
-        audioPlayer.addEventListener('error', () => {
-            showTip('音频文件加载失败，请检查文件路径');
-            isPlaying = false;
-            playPauseBtn.textContent = '▶';
-        });
-
-        // 音频播放结束（循环模式下不会触发，仅备用）
-        audioPlayer.addEventListener('ended', () => {
-            playPauseBtn.textContent = '▶';
-            isPlaying = false;
-            showTip('音乐播放完毕');
-        });
-
-        // ========== 页面隐藏/显示时的处理（优化体验） ========== 
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                audioPlayer.pause();
-                isPlaying = false;
-                playPauseBtn.textContent = '▶';
-            } else if (isPanelVisible) { // 页面恢复显示且面板打开时，自动播放
-                audioPlayer.play();
-                isPlaying = true;
-                playPauseBtn.textContent = '⏸';
-            }
-        });
+        
+        // 页面加载完成后不自动启动烟花效果
+        // window.addEventListener('load', startFireworks);
     </script>
 </body>
 </html>
